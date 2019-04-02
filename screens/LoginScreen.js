@@ -9,6 +9,7 @@ import {
 import { Google } from 'expo';
 import firebase from 'firebase';
 import  '../utils/YellowWaringFix';
+import { OauthCreds } from '../config'
 
 class LoginScreen extends Component {
     constructor() {
@@ -99,8 +100,8 @@ class LoginScreen extends Component {
             const result = await Expo.Google.logInAsync({
                 
             behavior: 'web',
-            androidClientId: "247347328313-m42ov1f405ms2mtrt3t8fnl0d6v26gln.apps.googleusercontent.com",
-            iosClientId: "247347328313-oi07a91amc4av9lgv3g9tb67nigt9o61.apps.googleusercontent.com",
+            androidClientId: OauthCreds.AndroidAPI,
+            iosClientId: OauthCreds.IosAPI,
             scopes: ['profile', 'email']
           });
     
