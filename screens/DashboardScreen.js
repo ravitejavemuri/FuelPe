@@ -11,7 +11,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 let index;
 export default class DashboardScreen extends Component {
    
-   
+   constructor(props){
+       super(props)
+      
+   }
    
     render() {
     return (
@@ -19,18 +22,21 @@ export default class DashboardScreen extends Component {
         //style={styles.wrapper}
         showsButtons
         loop={false}
-        onIndexChanged={(index)=>{this.setState({index})}}
         showsPagination={false}
+        onIndexChanged={(index)=>{
+            this.index = index;
+            console.log('index', this.index)
+        }}
         index={1}
-         nextButton={<Text/>}
+         //nextButton={<Text/>}
     >
         <View style={styles.slide1}>
-          <QrModule/>
+           <QrModule index = {this.index}/>
         </View>
+        <MapsModule />
         <View style={styles.slide2}>
             <LockModule/>
         </View>
-        <MapsModule />
     </Swiper>
         );
     }
