@@ -3,13 +3,15 @@ import {
     View,
     Text,
     StyleSheet,
-    Alert
+    Alert,
+    FlatList
 } from "react-native";
 import { Constants, Location, Permissions,MapView } from 'expo';
 import { IntentLauncherAndroid } from 'expo';
 import { data } from '../utils/dummy';
 import axios from 'axios';
 import { mapsApi } from '../config';
+import ListItem from '../components/lists/ListItem'
 
 
 class MapsModule extends Component {
@@ -21,36 +23,38 @@ class MapsModule extends Component {
                 longitude:78.4867
             },
             errorMessage:null,
-            markers:[]
+            markers:[],
+            metadata:''
         }
 
     }
-    async componentDidMount(){
-         this._checkLocationService()
-        // this._getLocationAsync()
-        }
-        
-        _checkLocationService= async () =>{
-            let enable_status = await Location.hasServicesEnabledAsync()
-            console.log(enable_status);
-            if(!enable_status){
-                Alert.alert(
-                    'Enable Location',
-                    'Location is required !',
-                    [
-                        {text: 'Enable', onPress:  async () => {  await  IntentLauncherAndroid.startActivityAsync(
-                            IntentLauncherAndroid.ACTION_LOCATION_SOURCE_SETTINGS
-                        );
-                        this._getLocationAsync();
-                    }
-                },
-            ],
-            { cancelable: false }
-        )
-        
-    } else {
-        this._getLocationAsync();
-   }
+
+async componentWillMount(){
+    //  this._checkLocationService()
+     this._getLocationAsync()
+    }
+    
+    _checkLocationService= async () =>{
+        let enable_status = await Location.hasServicesEnabledAsync()
+        console.log(enable_status);
+        if(!enable_status){
+            Alert.alert(
+                'Enable Location',
+                'Location is required !',
+                [
+                    {text: 'Enable', onPress:  async () => {  await  IntentLauncherAndroid.startActivityAsync(
+                        IntentLauncherAndroid.ACTION_LOCATION_SOURCE_SETTINGS
+                    );
+                    this._getLocationAsync();
+                }
+            },
+        ],
+        { cancelable: false }
+    )
+    
+} else {
+    this._getLocationAsync();
+}
 }
 
 _getLocationAsync = async () => {
@@ -85,7 +89,17 @@ _fetchData = async (location_state) => {
         let cords = data.results.map((point)=>{ // add orig_data. before data for production
             return point.geometry.location
         })
-        this.setState({markers : cords})
+        let metadata = data.results.map((meta)=>{
+            let meta_data = {
+                name:meta.name,
+                area:meta.vicinity,
+                rating:meta.rating,
+                id:meta.id
+            }
+            return meta_data
+        })
+         console.log(metadata)
+        this.setState({markers : cords, metadata})
     
     }catch(err){
         console.log(err);
@@ -113,11 +127,25 @@ renderMarker(){
         )
 });}
 
+renderList(){
+    this.state.metadata.map((item)=>{
+        return(
+            <ListItem
+            name={item.name}
+            area={item.area}
+            rating={item.rating}
+            key={item.id}
+            />
+        )
+    })
+   
+}
 render() {
-    //console.log("state from render",this.state.location)
+    console.log("state from render",this.state.metadata)
     return (
+<React.Fragment >
     <MapView
-    style={{ flex: 1 }}
+    style={styles.mapContainer}
     region={{
         latitude: this.state.location.latitude,
         longitude: this.state.location.longitude,
@@ -152,17 +180,28 @@ render() {
             />
         )
 })}
-
    </MapView>
+    <View style = {styles.listContainer}>
+        {this.state.metadata ? this.renderList():false}
+    </View>
+ </React.Fragment>
         );
     }
 }
 export default MapsModule;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    mapContainer: {
+        flex: 4,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        //marginBottom:150
+    },
+    listContainer:{
+        flex: 1,
+        position:'relative',
+        backgroundColor:'red',       
+        bottom:0,
+       // height:100
     }
 });

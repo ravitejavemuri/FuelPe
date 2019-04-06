@@ -4,7 +4,8 @@ import {
     Text,
     StyleSheet,
     Button,
-    ActivityIndicator
+    ActivityIndicator,
+    AsyncStorage
 } from "react-native";
 import { Google } from 'expo';
 import firebase from 'firebase';
@@ -53,21 +54,25 @@ class LoginScreen extends Component {
               firebase
                 .auth()
                 .signInAndRetrieveDataWithCredential(credential)
+                .then(async function(result) {
+                  console.log('user signed in ', result.additionalUserInfo.profile);
+                  try{
+                    await AsyncStorage.setItem('user_info',JSON.stringify(result.additionalUserInfo.profile))
+                  }catch(err){
+                    console.log("async store err", err);
+                  }
+                })
                 .then(function(result) {
-                  console.log('user signed in ');
-                  if (result.additionalUserInfo.isNewUser) {
-                    firebase
-                      .database()
-                      .ref('/users/' + result.user.uid)
-                      .set({
-                        gmail: result.user.email,
-                        profile_picture: result.additionalUserInfo.profile.picture,
-                        first_name: result.additionalUserInfo.profile.given_name,
-                        last_name: result.additionalUserInfo.profile.family_name,
-                        created_at: Date.now()
-                      })
-                      .then(function(snapshot) {
-                        // console.log('Snapshot', snapshot);
+                      if (result.additionalUserInfo.isNewUser) {
+                        firebase
+                          .database()
+                          .ref('/users/' + result.user.uid)
+                          .set({
+                            gmail: result.user.email,
+                            profile_picture: result.additionalUserInfo.profile.picture,
+                            first_name: result.additionalUserInfo.profile.given_name,
+                            last_name: result.additionalUserInfo.profile.family_name,
+                            created_at: Date.now()
                       });
                   } else {
                     firebase
