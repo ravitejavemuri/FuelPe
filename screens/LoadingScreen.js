@@ -17,7 +17,7 @@ class LoadingScreen extends Component {
     checkIfLoggIn =() =>{
         firebase.auth().onAuthStateChanged((user)=>{
             if(user){
-                this.props.navigation.navigate('DashboardScreen')
+                this.props.navigation.navigate('DashboardScreen') // REPLACED DashboardScreen WITH LoginScreen
             } else {
                 this.props.navigation.navigate('LoginScreen')
             }

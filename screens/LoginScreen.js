@@ -3,13 +3,19 @@ import {
     View,
     Text,
     StyleSheet,
-    Button,
-    ActivityIndicator
+    ActivityIndicator,
+    AsyncStorage,
+    Image,
+    TouchableHighlight,
+    Linking,
 } from "react-native";
 import { Google } from 'expo';
 import firebase from 'firebase';
 import  '../utils/YellowWaringFix';
-import { OauthCreds } from '../config'
+import colors from '../styles/colors';
+import RoundedButton from '../components/buttons/RoundedButton';
+import { Ionicons } from '@expo/vector-icons';
+
 
 class LoginScreen extends Component {
     constructor() {
@@ -53,6 +59,14 @@ class LoginScreen extends Component {
               firebase
                 .auth()
                 .signInAndRetrieveDataWithCredential(credential)
+                .then(async function(result) {
+                  console.log('user signed in ', result.additionalUserInfo.profile);
+                  try{
+                    await AsyncStorage.setItem('user_info',JSON.stringify(result.additionalUserInfo.profile.given_name))
+                  }catch(err){
+                    console.log("async store err", err);
+                  }
+                })
                 .then(function(result) {
                   console.log('user signed in ');
                   if (result.additionalUserInfo.isNewUser) {
@@ -100,8 +114,8 @@ class LoginScreen extends Component {
             const result = await Expo.Google.logInAsync({
                 
             behavior: 'web',
-            androidClientId: OauthCreds.AndroidAPI,
-            iosClientId: OauthCreds.IosAPI,
+            androidClientId: "247347328313-m42ov1f405ms2mtrt3t8fnl0d6v26gln.apps.googleusercontent.com",
+            iosClientId: "247347328313-oi07a91amc4av9lgv3g9tb67nigt9o61.apps.googleusercontent.com",
             scopes: ['profile', 'email']
           });
     
@@ -123,10 +137,37 @@ class LoginScreen extends Component {
               {this.state.login ? 
               <ActivityIndicator size="large"/> 
               : 
-              <Button 
-              title ="Sign in with Google"
-              onPress={()=>this.signIn()}
-              />
+              <View style = { styles.welcomeWrapper }>
+                <Image 
+                  source = { require('../assets/logo.png') }
+                  style = { styles.logo }
+                />
+                <Text style = { styles.welcomeText }>
+                  Welcome to FuelPe.
+                </Text>
+                <RoundedButton 
+                  text = "Continue with Google"
+                  textColor = {colors.red01}
+                  background = {colors.white}
+                  icon = { <Ionicons name="logo-googleplus" size={20} style={styles.googleButtonIcon} /> }
+                  handleOnPress={this.signIn}
+                />
+                <View style={styles.footContainer}>
+                  <Text style={styles.footText}>By clicking continue, I agree to FuelPe's </Text>
+                    <TouchableHighlight style={styles.linkOption} onPress={()=>Linking.openURL('http://www.google.com')}>
+                      <Text style={styles.footText}>Terms of Service</Text>
+                    </TouchableHighlight>
+                    <Text style={styles.footText}>, </Text>
+                    <TouchableHighlight style={styles.linkOption}>
+                      <Text style={styles.footText} onPress={()=>Linking.openURL('http://www.google.com')}>Payments Terms of Service</Text>
+                    </TouchableHighlight>
+                    <Text style={styles.footText}> and </Text>
+                    <TouchableHighlight style={styles.linkOption}>
+                      <Text style={styles.footText} onPress={()=>Linking.openURL('http://www.google.com')}>Privacy Policy</Text>
+                    </TouchableHighlight>
+                    <Text style={styles.footText}>.</Text>
+                </View>
+              </View>
             }
                
             </View>
@@ -135,10 +176,56 @@ class LoginScreen extends Component {
 }
 export default LoginScreen;
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-});
+
+const styles = StyleSheet.create ({
+  container: {
+    flex: 1,
+    backgroundColor: colors.red01,
+    justifyContent: 'center',
+  },
+  wrapper: {
+      flex: 1,
+      backgroundColor: colors.red01,
+      justifyContent: 'center',
+  },
+  welcomeWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    paddingLeft: 30,
+    paddingRight: 20,
+  },
+  logo: {
+    width: 50,
+    height: 80,
+    marginBottom:30,
+  },
+  welcomeText: {
+    fontSize: 30,
+    color: colors.white,
+    fontWeight: '300',
+    marginBottom: 40,
+  },
+  googleButtonIcon: {
+    color: colors.red01,
+    position: 'relative',
+    left: 30,
+    zIndex: 8,
+  },
+  footContainer: {
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    marginTop: 40,
+  },
+  footText: {
+    color: colors.white,
+    fontSize: 13,
+    fontWeight: '400',
+    lineHeight: 20,
+  },
+  linkOption: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.white,
+  },
+})
