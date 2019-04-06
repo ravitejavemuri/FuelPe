@@ -1,0 +1,9 @@
+  expo generated old
+  Keystore password: e40f0597cd6545a68f098dc298aceebd
+  Key alias:         QHJhdl9kZXYvRnVlbFBl
+  Key password:      3c8b8e3f064046cd83fd89f46a9fb9a4
+
+  mannualy generated( working !! )
+  path C:\Users\GamaPSH\.android\debug.keystore
+  alias androiddebugkey
+    pass: android( for both )
