@@ -637,6 +637,7 @@ export const data = {
                 }
              }
           },
+          "rating" : 3.8,
           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png",
           "id" : "728a29e8c1f318416f3090eabb624e0bf0396eeb",
           "name" : "G V R Filling Station ( Bharat Petroleum )",
