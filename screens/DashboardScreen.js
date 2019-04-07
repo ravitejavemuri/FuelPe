@@ -11,25 +11,31 @@ import { MaterialIcons } from '@expo/vector-icons';
 let index;
 export default class DashboardScreen extends Component {
    
-   
-   
+   constructor(props){
+       super(props)
+      
+   }
+
     render() {
     return (
     <Swiper 
         //style={styles.wrapper}
-        showsButtons
+        //showsButtons
         loop={false}
-        onIndexChanged={(index)=>{this.setState({index})}}
         showsPagination={false}
+        onIndexChanged={(index)=>{
+            this.index = index;
+            console.log('index', this.index)
+        }}
         index={1}
-         nextButton={<Text/>}
+         //nextButton={<Text/>}
     >
-        <View style={styles.slide1}>
-          <QrModule/>
-        </View>
-        <View style={styles.slide2}>
+        {/* <View style={styles.slide1}>
+           <QrModule index = {this.index}/>
+        </View> */}
+        {/* <View style={styles.slide2}>
             <LockModule/>
-        </View>
+        </View> */}
         <MapsModule />
     </Swiper>
         );
@@ -65,52 +71,3 @@ text: {
 });
 
 
-
-
-// import React, { Component } from "react";
-// import { 
-//     View,
-//     Text,
-//     StyleSheet,
-//     ScrollView,
-//     Dimensions
-// } from "react-native";
-// import LockModule from '../containers/LockModule';
-// import MapsModule from '../containers/MapsModule';
-
-// let screenWidth = Dimensions.get('window').width;
-// let screenHight = Dimensions.get('window').height;
-
-// class DashboardScreen extends Component {
-//     render() {
-    
-//         return (
-//             <ScrollView
-//                 horizontal={true}
-//                 pagingEnabled={true}
-//                 showsHorizontalScrollIndicator={false}
-//                 scrollEventThrottle={16}
-//             >
-
-//             <View style={styles.container}>
-//                <LockModule/>
-//             </View>
-//             <View style={styles.container}>
-//                 <MapsModule/>
-//             </View>
-//             </ScrollView>
-//         );
-//     }
-// }
-
-// const styles = StyleSheet.create({
-//     container: {
-    //         flex: 1,
-    //         alignItems: 'center',
-    //         justifyContent: 'center',
-    //         marginTop:20,
-    //         width:screenWidth,
-    //         height:screenHight
-    //     }
-    // });
-    
