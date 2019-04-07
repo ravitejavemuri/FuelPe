@@ -5,10 +5,51 @@ import Swiper from 'react-native-swiper';
 import MapsModule from '../containers/MapsModule';
 import LockModule from '../containers/LockModule';
 import QrModule from '../containers/QrModule';
+import {  Location, Permissions } from 'expo';
 import colors from '../styles/colors';
 
 let index;
 export default class DashboardScreen extends Component {
+
+
+    constructor(props){
+        super(props)
+        this.state = {
+            location_state:''
+        }
+    }
+     componentWillMount() {
+        this._getLocationAsync()
+
+    }
+    
+    _getLocationAsync = async () => {
+        try{
+            let { status } = await Permissions.askAsync(Permissions.LOCATION);
+            if(status !== 'granted') {
+                this.setState({
+                    errorMessage: 'Permission to access location was denied'
+                });
+                //console.log(this.state.errorMessage)
+            }
+            let location = await Location.getCurrentPositionAsync({});
+            //console.log("location is ", location)
+            let location_state={
+                latitude:location.coords.latitude,
+                longitude:location.coords.longitude
+            }
+            //console.log("location state", location_state,"lat and long from location ")
+        
+            //this.props.getLocation(location);
+            this.setState({location_state:location_state})
+            //this._fetchData(location_state);
+    
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+
     render() {
     return (
     <Swiper 
@@ -26,7 +67,7 @@ export default class DashboardScreen extends Component {
         <View style={styles.slide2}>
             <LockModule/>
         </View>
-        <MapsModule />
+        <MapsModule location={this.state.location_state} />
     </Swiper>
         );
     }
