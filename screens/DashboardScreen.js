@@ -20,13 +20,13 @@ export default class DashboardScreen extends Component {
         index={1}
          nextButton={<Text/>}
     >
-        {/* <View style={styles.slide1}>
+        <View style={styles.slide1}>
           <QrModule/>
-        </View> */}
+        </View>
         <View style={styles.slide2}>
             <LockModule/>
         </View>
-        {/* <MapsModule /> */}
+        <MapsModule />
     </Swiper>
         );
     }
