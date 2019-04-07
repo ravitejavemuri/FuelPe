@@ -196,8 +196,9 @@ const styles = StyleSheet.create({
     listContainer:{
         flex: 1,
         position:'relative',
-       // backgroundColor:'w',       
+        backgroundColor:'grey',       
         //bottom:0,
+        //padding:3
     },
     Indicator : {
         flex:1,
