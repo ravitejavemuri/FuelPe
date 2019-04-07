@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 import { 
     View,
@@ -9,6 +10,7 @@ import {
     LayoutAnimation,
 } from "react-native";
 import { BarCodeScanner, Permissions } from 'expo';
+import { Button } from "native-base";
 
 class QrModule extends Component {
     constructor(props){
@@ -55,12 +57,15 @@ class QrModule extends Component {
                 <Text>Requesting Permission</Text>
                 : this.state.hasCameraPermission === false
                 ? 
+                <View>
                 <Text style={{ color: '#fff' }}>
                     Camera permission is not granted
                 </Text>
+                <Button/>
+                </View>
                 :
                 <BarCodeScanner
-                    onBarCodeRead = {this._handleBarCodeRead.bind(this)}
+                onBarCodeScanned = {this._handleBarCodeRead.bind(this)}
                     style={{
                         height: Dimensions.get('window').height,
                         width: Dimensions.get('window').width,
