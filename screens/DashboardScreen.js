@@ -2,41 +2,31 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { MapView } from 'expo';
 import MapsModule from '../containers/MapsModule';
 import LockModule from '../containers/LockModule';
 import QrModule from '../containers/QrModule';
-import { MaterialIcons } from '@expo/vector-icons';
+import colors from '../styles/colors';
 
 let index;
 export default class DashboardScreen extends Component {
-   
-   constructor(props){
-       super(props)
-      
-   }
-
     render() {
     return (
     <Swiper 
         //style={styles.wrapper}
-        //showsButtons
+        // showsButtons
         loop={false}
+        onIndexChanged={(index)=>{this.setState({index})}}
         showsPagination={false}
-        onIndexChanged={(index)=>{
-            this.index = index;
-            console.log('index', this.index)
-        }}
         index={1}
-         //nextButton={<Text/>}
+         nextButton={<Text/>}
     >
         {/* <View style={styles.slide1}>
-           <QrModule index = {this.index}/>
+          <QrModule/>
         </View> */}
-        {/* <View style={styles.slide2}>
+        <View style={styles.slide2}>
             <LockModule/>
-        </View> */}
-        <MapsModule />
+        </View>
+        {/* <MapsModule /> */}
     </Swiper>
         );
     }
@@ -49,19 +39,17 @@ slide1: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#9DD6EB'
+    backgroundColor: colors.red01,
 },
 slide2: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#97CAE5'
+    backgroundColor: colors.white,
 },
 slide3: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#92BBD9'
+    backgroundColor: colors.red01,
 },
 text: {
     color: '#fff',
@@ -69,5 +57,4 @@ text: {
     fontWeight: 'bold'
 }
 });
-
-
+    

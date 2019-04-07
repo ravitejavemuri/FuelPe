@@ -4,7 +4,8 @@ import {
     Text,
     StyleSheet,
     Alert,
-    FlatList
+    FlatList,
+    ActivityIndicator
 } from "react-native";
 import { Constants, Location, Permissions,MapView } from 'expo';
 import { IntentLauncherAndroid } from 'expo';
@@ -28,15 +29,16 @@ class MapsModule extends Component {
         }
 
     }
+ _keyExtractor = (item, index) => item.id;
 
-async componentWillMount(){
+async componentDidMount(){
     //  this._checkLocationService()
      this._getLocationAsync()
     }
     
     _checkLocationService= async () =>{
         let enable_status = await Location.hasServicesEnabledAsync()
-        console.log(enable_status);
+       // console.log(enable_status);
         if(!enable_status){
             Alert.alert(
                 'Enable Location',
@@ -64,15 +66,15 @@ _getLocationAsync = async () => {
             this.setState({
                 errorMessage: 'Permission to access location was denied'
             });
-            console.log(this.state.errorMessage)
+            //console.log(this.state.errorMessage)
         }
         let location = await Location.getCurrentPositionAsync({});
-        console.log("location is ", location)
+        //console.log("location is ", location)
         let location_state={
             latitude:location.coords.latitude,
             longitude:location.coords.longitude
         }
-        console.log("location state", location_state,"lat and long from location ", location.latitude,location.longitude)
+       // console.log("location state", location_state,"lat and long from location ", location.latitude,location.longitude)
         this.setState({location:location_state})
         this._fetchData(location_state);
 
@@ -83,7 +85,7 @@ _getLocationAsync = async () => {
 _fetchData = async (location_state) => {
     // code for real time request
     try{
-        console.log(location_state.latitude, mapsApi)
+        //console.log(location_state.latitude, mapsApi)
             // let orig_data = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location_state.latitude}, ${location_state.longitude}&radius=5000&type=gas_station&key=${mapsApi}`)
           
         let cords = data.results.map((point)=>{ // add orig_data. before data for production
@@ -98,7 +100,7 @@ _fetchData = async (location_state) => {
             }
             return meta_data
         })
-         console.log(metadata)
+         //console.log(metadata)
         this.setState({markers : cords, metadata})
     
     }catch(err){
@@ -107,41 +109,25 @@ _fetchData = async (location_state) => {
 
 }
 
-renderMarker(){
-     this.state.markers.map((marker, index) => {
-         //console.log("marker",marker)
-        const coords = {
-            latitude: marker.lat,
-            longitude: marker.lng,
-        };
-   
-        //const metadata = `Status: ${marker.statusValue}`;
-        console.log("corsds are",coords)
-        return (
-            <MapView.Marker
-            //    key={index}
-               coordinate={coords}
-               title={"petrol"}
-              // description={metadata}
-            />
-        )
-});}
+_handlePress = (index) => {
+    console.log("after press",index)
+}
 
-renderList(){
-    this.state.metadata.map((item)=>{
-        return(
-            <ListItem
+renderList({item, index}){
+    //console.log(index)
+    return(
+        <ListItem
             name={item.name}
             area={item.area}
             rating={item.rating}
             key={item.id}
-            />
-        )
-    })
-   
+            index={index}
+            onPress = {this._handlePress}
+         /> 
+    )
 }
 render() {
-    console.log("state from render",this.state.metadata)
+    //console.log("state from render",this.state.metadata)
     return (
 <React.Fragment >
     <MapView
@@ -161,7 +147,7 @@ render() {
       pinColor={"teal"}
       //description={metadata}
    />
-   {
+   {/* {
      this.state.markers.map((marker, index) => {
          //console.log("marker",marker)
         const coords = {
@@ -170,7 +156,7 @@ render() {
         };
    
         //const metadata = `Status: ${marker.statusValue}`;
-        console.log("corsds are",coords)
+       // console.log("corsds are",coords)
         return (
             <MapView.Marker
                 key={index}
@@ -179,10 +165,20 @@ render() {
               // description={metadata}
             />
         )
-})}
+})} */}
    </MapView>
     <View style = {styles.listContainer}>
-        {this.state.metadata ? this.renderList():false}
+        {this.state.metadata ? 
+            <FlatList
+               // pagingEnabled ={true}
+                data={this.state.metadata}
+                //extraData={this.state}
+                renderItem={this.renderList}
+                keyExtractor={this._keyExtractor}
+            />
+            :
+            <ActivityIndicator size="large" style={styles.Indicator}/>
+        }
     </View>
  </React.Fragment>
         );
@@ -200,8 +196,13 @@ const styles = StyleSheet.create({
     listContainer:{
         flex: 1,
         position:'relative',
-        backgroundColor:'red',       
-        bottom:0,
-       // height:100
+       // backgroundColor:'w',       
+        //bottom:0,
+    },
+    Indicator : {
+        flex:1,
+        justifyContent:'center',
+        alignItems: 'center',
+
     }
 });
