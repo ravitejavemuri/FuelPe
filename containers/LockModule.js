@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import {
     View,
@@ -8,6 +7,7 @@ import {
     SafeAreaView,
     ScrollView,
     Dimensions,
+    Platform,
 } from "react-native";
 import colors from '../styles/colors';
 import Banner from '../components/banner/Banner';
@@ -63,8 +63,8 @@ class LockModule extends Component {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
-                    <View style={{ flex: 1, backgroundColor: colors.white, paddingTop: 40 }}>
-                        <Text style={{ fontSize: 30, fontWeight: '700', paddingHorizontal: 40 }}>
+                    <View style={{ flex: 1, backgroundColor: colors.white, paddingTop: Platform.OS === 'ios' ? 40 : 60 }}>
+                        <Text style={{ fontSize: Platform.OS === 'ios' ? 30 : 22, fontWeight: '700', paddingHorizontal: 40 }}>
                             Hi, {this.state.user_data.replace(/['"]+/g, '')}!
                         </Text>
 
@@ -106,7 +106,7 @@ class LockModule extends Component {
                                     </Text>
                                 </View>
                                 <View style={{flex: 1}}>
-                                    <Text style={{marginBottom:15}}>
+                                    <Text style={{marginBottom: Platform.OS === 'ios' ? 15 : 28}}>
 
                                     </Text>
                                     <Text style={{fontSize:30}}>
