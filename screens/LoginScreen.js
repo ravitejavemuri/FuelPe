@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
   welcomeWrapper: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
     paddingLeft: 30,
     paddingRight: 20,
