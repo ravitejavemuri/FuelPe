@@ -5,10 +5,54 @@ import Swiper from 'react-native-swiper';
 import MapsModule from '../containers/MapsModule';
 import LockModule from '../containers/LockModule';
 import QrModule from '../containers/QrModule';
+import {  Location, Permissions } from 'expo';
 import colors from '../styles/colors';
 
 let index;
 export default class DashboardScreen extends Component {
+
+
+    constructor(props){
+        super(props)
+        this.state = {
+            location_state:''
+        }
+    }
+     componentWillMount() {
+        this._getLocationAsync()
+
+    }
+    
+    _getLocationAsync = async () => {
+        console.log('inside get location')
+        try{
+            let { status } = await Permissions.askAsync(Permissions.LOCATION);
+            console.log("status", status)
+            if(status !== 'granted') {
+                console.log("not granted",this.state.errorMessage)
+                this.setState({
+                    errorMessage: 'Permission to access location was denied'
+                });
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            console.log("location is ", location)
+            let location_state={
+                latitude:location.coords.latitude,
+                longitude:location.coords.longitude
+            }
+            console.log("location state", location_state,"lat and long from location ")
+        
+            //this.props.getLocation(location);
+            this.setState({location_state:location_state})
+            //this._fetchData(location_state);
+    
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+
     render() {
     return (
     <Swiper 
@@ -24,9 +68,9 @@ export default class DashboardScreen extends Component {
           <QrModule/>
         </View>
         <View style={styles.slide2}>
-            <LockModule/>
+            <LockModule location_lock = {this.state.location_state} />
         </View>
-        <MapsModule />
+        <MapsModule location={this.state.location_state} />
     </Swiper>
         );
     }
