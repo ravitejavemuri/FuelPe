@@ -39,6 +39,8 @@ class LockModule extends Component {
 
         this._currentIndex = 0;
         this._childernCount = 5;
+
+
     }
 
     componentDidMount() {
@@ -51,6 +53,7 @@ class LockModule extends Component {
     async componentWillMount() {
         try {
             let user_data = await AsyncStorage.getItem('user_info');
+
             let user_id = await AsyncStorage.getItem('user_id');
             // console.log("user data from lock module", JSON.parse(user_data));
             // console.log("user id from lock module", user_id);
@@ -78,6 +81,7 @@ class LockModule extends Component {
                 console.log("The read failed: " + errorObject.code);
             });
         } catch (err) {
+
             console.log("err from lock module", err);
         }
     }

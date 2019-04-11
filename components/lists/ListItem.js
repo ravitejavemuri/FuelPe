@@ -2,20 +2,40 @@ import React from "react";
 import { 
   View,
   Text,
-  StyleSheet
+  StyleSheet,
+  TouchableHighlight
 } from "react-native";
 
-const ListItem = ({name, area, rating}) => (
-  <View style={styles.container}>
-    <View style={styles.infoContainer}>
-      <Text style={styles.nameText}>{name}</Text>
-      <Text style={styles.areaText}>{area}</Text>  
+
+
+class ListItem extends React.Component {
+  constructor(props){
+    super(props)
+  }
+  _onPress = () => {
+    // console.log('pressed');
+    this.props.route(this.props.index)
+  }
+  render() {
+    const { name, area, rating, id} = this.props
+    return (
+       <TouchableHighlight key={id} onPress={this._onPress}>
+    <View style={styles.container}>
+      <View style={styles.infoContainer}>
+        <Text style={styles.nameText}>{name}</Text>
+        <Text style={styles.areaText}>{area}</Text>  
+      </View>
+      <View style={styles.ratingContainer}>
+        <Text>{rating}</Text>
+      </View>
     </View>
-    <View style={styles.ratingContainer}>
-      <Text>{rating}</Text>
-    </View>
-  </View>
-  )
+    </TouchableHighlight>
+
+    );
+  }
+}
+
+
 export default ListItem;
 
 const styles = StyleSheet.create({

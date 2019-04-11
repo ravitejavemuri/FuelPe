@@ -15,14 +15,15 @@ export default class DashboardScreen extends Component {
     constructor(props){
         super(props)
         this.state = {
-            location_state:''
+            location_state:'',
+            errorMessage:null,
         }
     }
      componentWillMount() {
         this._getLocationAsync()
 
     }
-    
+   
     _getLocationAsync = async () => {
         console.log('inside get location')
         try{
@@ -65,12 +66,15 @@ export default class DashboardScreen extends Component {
          nextButton={<Text/>}
     >
         <View style={styles.slide1}>
-          <QrModule/>
+          <QrModule id={this.state.index} />
         </View>
         <View style={styles.slide2}>
-            <LockModule location_lock = {this.state.location_state} />
+            <LockModule location_lock = {this.state.location_state}/>
         </View>
-        <MapsModule location={this.state.location_state} />
+        <MapsModule 
+            location={this.state.location_state}
+            refresh = {this._getLocationAsync}
+         />
     </Swiper>
         );
     }
@@ -83,7 +87,7 @@ slide1: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.red01,
+    //backgroundColor: colors.red01,
 },
 slide2: {
     flex: 1,
