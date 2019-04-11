@@ -14,15 +14,16 @@ class LoadingScreen extends Component {
     }
 
     // can be automated with redux
-    checkIfLoggIn =() =>{
-        firebase.auth().onAuthStateChanged((user)=>{
+    checkIfLoggIn = () =>{
+        firebase.auth().onAuthStateChanged(user => {
             if(user){
-                this.props.navigation.navigate('DashboardScreen') // REPLACED DashboardScreen WITH LoginScreen
+                this.props.navigation.navigate('DashboardScreen');
             } else {
-                this.props.navigation.navigate('LoginScreen')
+                this.props.navigation.navigate('LoginScreen');
             }
-        })
-    }
+        });
+    };
+
     render() {
         return (
             <View style={styles.container}>
