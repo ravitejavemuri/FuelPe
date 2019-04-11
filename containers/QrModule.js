@@ -1,6 +1,6 @@
 
 import React, { Component } from "react";
-import { 
+import {
     View,
     Text,
     StyleSheet,
@@ -8,22 +8,33 @@ import {
     Linking,
     Dimensions,
     LayoutAnimation,
+    Modal
 } from "react-native";
 import { BarCodeScanner, Permissions } from 'expo';
 import { Button } from "native-base";
-
+import FullScreen from '../components/modals/FullScreen'
 class QrModule extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.state={
-            hasCameraPermission:null,
-            lastScanned:null
+        this.state = {
+            hasCameraPermission: null,
+            lastScanned: null,
+            show: false
         }
     }
 
-    componentDidMount(){
-        console.log("from qr",this.props.index)
+    componentDidMount() {
+        console.log("from qr", this.props.index)
         this._requestCameraPermission();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        // const { location } = this.props;
+        if (this.props.id !== prevProps.id) {
+            console.log("from qr", this.props.id)
+
+
+        }
     }
 
     _requestCameraPermission = async () => {
@@ -33,46 +44,52 @@ class QrModule extends Component {
         });
     }
 
-    _handleBarCodeRead = result =>{        
+    _handleBarCodeRead = result => {
         //console.log("scanned data", result.data)
-        if(result.data !== this.state.lastScanned){
+        if (result.data && this.props.id === 0) {
             LayoutAnimation.spring();
-            this.setState({lastScanned: result.data})
+            this.setState({ lastScanned: result.data, show: true })
         }
     }
+
+    _closeModal = (status) => {
+        this.setState({ show: status })
+    }
     _renderScanned = () => {
-        return(
-            <View style={styles.bottomBar}>
-                <Text  numberOfLines={1} style={styles.scannedText} onPress={()=>this.setState({lastScanned:''})}>
-                     {this.state.lastScanned}
-                </Text>
+        return (
+            <View style={styles.scanned}>
+                <FullScreen
+                    visible={this.state.show}
+                    close={this._closeModal}
+                />
             </View>
         );
     }
     render() {
         return (
             <View style={styles.container} >
-                { this.state.hasCameraPermission === null 
-                ?
-                <Text>Requesting Permission</Text>
-                : this.state.hasCameraPermission === false
-                ? 
-                <View>
-                <Text style={{ color: '#fff' }}>
-                    Camera permission is not granted
-                </Text>
-                <Button/>
-                </View>
-                :
-                <BarCodeScanner
-                onBarCodeScanned = {this._handleBarCodeRead.bind(this)}
-                    style={{
-                        height: Dimensions.get('window').height,
-                        width: Dimensions.get('window').width,
-                      }}
-                />
-            }
-              {this._renderScanned()}
+                {this.state.hasCameraPermission === null
+                    ?
+                    <Text>Requesting Permission</Text>
+                    : this.state.hasCameraPermission === false
+                        ?
+                        <View>
+                            <Text style={{ color: '#fff' }}>
+                                Camera permission is not granted
+                             </Text>
+                        </View>
+                        :
+                        <View style={styles.camBox }>
+                            <BarCodeScanner
+                                onBarCodeScanned={this._handleBarCodeRead.bind(this)}
+                                style={{
+                                    height: Dimensions.get('window').height,
+                                    width: Dimensions.get('window').width,
+                                }}
+                            />
+                        </View>
+                }
+                {this._renderScanned()}
             </View>
         );
     }
@@ -85,17 +102,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    scannedText:{
-        color:'#fff',
-        fontSize:20
+    scannedText: {
+        color: '#fff',
+        fontSize: 20
     },
-      bottomBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    padding: 15,
-    flexDirection: 'row',
-  },
+    scanned: {
+        position: 'absolute'
+    },
+    camBox: {
+        
+    }
 });
