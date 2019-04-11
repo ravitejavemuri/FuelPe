@@ -33,9 +33,7 @@ class LockModule extends Component {
         this._currentIndex = 0;
         this._childernCount = 5;
 
-        // this.state = {               ADDED ON THE TOP
-        //     user_data: ''
-        // }
+     
     }
 
     componentDidMount() {
@@ -48,7 +46,8 @@ class LockModule extends Component {
     async componentWillMount() {
         try{
             let user_data = await AsyncStorage.getItem('user_info');
-            console.log("user data from lock module",user_data)
+            console.log("user data from lock module",user_data) 
+     //----------------------- user_data= JSON.parse(user_data); forgot to parse, uncomment it if the existing code is creating a problem
             this.setState({user_data})
         }catch(err){
             console.log("err from lock module", err);

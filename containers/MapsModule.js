@@ -110,7 +110,7 @@ class MapsModule extends Component {
                 }
             ]
         }
-        console.log('data is ', data)
+        //console.log('data is ', data)
         getDirections(data)
     }
 
