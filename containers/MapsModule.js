@@ -66,20 +66,20 @@ class MapsModule extends Component {
                 this.setState({ markers: cords, metadata })
             } else {
                 console.log("inside else of the fetch data")
-                // Alert.alert(
-                //     'Enable Location',
-                //     'Location is required !',
-                //     [
-                //         {
-                //             text: 'Enable', onPress: async () => {
-                //                 await IntentLauncherAndroid.startActivityAsync(
-                //                     IntentLauncherAndroid.ACTION_LOCATION_SOURCE_SETTINGS
-                //                 );
-                //             }
-                //         },
-                //     ],
-                //     { cancelable: false }
-                // )
+                Alert.alert(
+                    'Enable Location',
+                    'Location is required !',
+                    [
+                        {
+                            text: 'Enable', onPress: async () => {
+                                await IntentLauncherAndroid.startActivityAsync(
+                                    IntentLauncherAndroid.ACTION_LOCATION_SOURCE_SETTINGS
+                                );
+                            }
+                        },
+                    ],
+                    { cancelable: false }
+                )
             }
 
         } catch (err) {

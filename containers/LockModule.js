@@ -151,7 +151,7 @@ class LockModule extends Component {
                                 </View>
                             </View>
                         </View>
-                        <View style={ [ {flex: 1, marginTop: 50, paddingHorizontal: 40, alignItems: 'center' }, {display: this.state.lock_state ? "block" : "none"} ] }>
+                        <View style={ [ {flex: 1, marginTop: 50, paddingHorizontal: 40, alignItems: 'center' }, {display: this.state.lock_state ? "flex" : "none"} ] }>
                             <Text style={{fontSize: 25}}>
                                 Locked at {this.state.petrol_price}
                             </Text>
