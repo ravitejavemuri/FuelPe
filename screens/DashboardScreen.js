@@ -5,7 +5,7 @@ import Swiper from 'react-native-swiper';
 import MapsModule from '../containers/MapsModule';
 import LockModule from '../containers/LockModule';
 import QrModule from '../containers/QrModule';
-import {  Constants, Permissions, Location  } from 'expo';
+import {  Location, Permissions } from 'expo';
 import colors from '../styles/colors';
 
 let index;
@@ -23,7 +23,7 @@ export default class DashboardScreen extends Component {
         this._getLocationAsync()
 
     }
-
+   
     _getLocationAsync = async () => {
         console.log('inside get location')
         try{
@@ -49,7 +49,7 @@ export default class DashboardScreen extends Component {
             //this._fetchData(location_state);
     
         }catch(err){
-            console.log(err);
+            console.log(err)
         }
     }
 
