@@ -6,9 +6,8 @@ import {
     Alert,
     FlatList,
     ActivityIndicator,
-    TouchableHighlight
 } from "react-native";
-import { Constants, Location, Permissions, MapView } from 'expo';
+import { Constants, Location, Permissions, MapView, AnimatedRegion } from 'expo';
 import { IntentLauncherAndroid } from 'expo';
 import { data } from '../utils/dummy';
 import axios from 'axios';
@@ -158,8 +157,10 @@ class MapsModule extends Component {
                 <View style={styles.listContainer}>
                     {this.state.metadata ?
                         <FlatList
-                            // pagingEnabled ={true}
+                            pagingEnabled ={true}
+                            horizontal={true}
                             data={this.state.metadata}
+                            showsHorizontalScrollIndicator={false}
                             //extraData={this.state}
                             keyExtractor={this._keyExtractor}
 
@@ -194,17 +195,17 @@ export default MapsModule;
 
 const styles = StyleSheet.create({
     mapContainer: {
-        flex: 4,
+        flex: 2,
         alignItems: 'center',
         justifyContent: 'center',
         //marginBottom:150
     },
     listContainer: {
         flex: 1,
-        position: 'relative',
-        backgroundColor: 'grey',
-        //bottom:0,
-        //padding:3
+        position: 'absolute',
+        bottom: 15,
+        left: 0,
+        right: 0,
     },
     Indicator: {
         flex: 1,

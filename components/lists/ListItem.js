@@ -1,15 +1,18 @@
 import React from "react";
-import { 
+import {
   View,
   Text,
   StyleSheet,
-  TouchableHighlight
+  TouchableHighlight,
+  Dimensions
 } from "react-native";
-
+import { MaterialIcons } from '@expo/vector-icons';
+import colors from "../../styles/colors";
+import { Rating } from 'react-native-ratings';
 
 
 class ListItem extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
   }
   _onPress = () => {
@@ -17,19 +20,29 @@ class ListItem extends React.Component {
     this.props.route(this.props.index)
   }
   render() {
-    const { name, area, rating, id} = this.props
+    const { name, area, rating, id } = this.props
     return (
-       <TouchableHighlight key={id} onPress={this._onPress}>
-    <View style={styles.container}>
-      <View style={styles.infoContainer}>
-        <Text style={styles.nameText}>{name}</Text>
-        <Text style={styles.areaText}>{area}</Text>  
-      </View>
-      <View style={styles.ratingContainer}>
-        <Text>{rating}</Text>
-      </View>
-    </View>
-    </TouchableHighlight>
+      <TouchableHighlight key={id} onPress={this._onPress}>
+        <View style={styles.container}>
+          <View style={styles.infoContainer}>
+            <Text style={styles.nameText}>{name}</Text>
+            <Text style={styles.areaText}>{area}</Text>
+            <View style={styles.ratingText}>
+              <Rating
+                style={{ paddingVertical: 10 }}
+                imageSize={15}
+                fractions={1}
+                readonly={true}
+                minValue={rating}
+                startingValue={rating}
+              />
+            </View>
+          </View>
+          <View style={styles.navigateContainer}>
+            <MaterialIcons name="directions" size={50} color={colors.white} />
+          </View>
+        </View>
+      </TouchableHighlight>
 
     );
   }
@@ -40,38 +53,47 @@ export default ListItem;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 4,
+    flex: 1,
     alignItems: 'stretch',
-    height:120,
-    flexDirection:'row',
-    padding:5,
-    backgroundColor:'grey',
+    width: Dimensions.get('window').width - 30,
+    height: 250,
+    flexDirection: 'row',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 1,
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    marginLeft: 15,
+    marginRight: 15,
   },
-  infoContainer:{
-    flex:3,
-    backgroundColor:'white',
+  infoContainer: {
+    flex: 2,
     justifyContent: 'center',
-    padding:2
-    
-
+    paddingHorizontal: 20,
   },
-  ratingContainer:{
-    flex:1,
+  navigateContainer: {
+    flex: 1,
     justifyContent: 'center',
-    backgroundColor:'yellow',
     alignItems: 'center',
-    padding:2
+    backgroundColor: colors.red01,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
   },
-  nameText : {
-    fontSize :13,
-    fontWeight:'bold',
-    padding:2
+  nameText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.red01,
+    marginBottom: 12,
   },
-  areaText : {
-    fontSize :12,
-    fontStyle:'italic',
-    //color:'grey'
+  areaText: {
+    fontSize: 14,
+    fontStyle: 'italic',
+    marginBottom: 5,
+  },
+  ratingText: {
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start'
   }
-
-
 });
