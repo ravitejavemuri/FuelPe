@@ -7,16 +7,15 @@ import {
     FlatList,
     ActivityIndicator,
 } from "react-native";
-import { Constants, Location, Permissions, MapView, AnimatedRegion } from 'expo';
+import { Location, Permissions, MapView } from 'expo';
 import { IntentLauncherAndroid } from 'expo';
 import { data } from '../utils/dummy';
-import axios from 'axios';
 import { mapsApi } from '../config';
 import ListItem from '../components/lists/ListItem'
 import getDirections from 'react-native-google-maps-directions'
 
 
-class MapsModule extends Component {
+class FuelStation extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -33,15 +32,39 @@ class MapsModule extends Component {
     }
     _keyExtractor = (item, index) => item.id;
 
-    componentDidUpdate(prevProps, prevState) {
-        const { location } = this.props;
-        if (this.props.location !== prevProps.location) {
-            console.log("from maps", location)
-            this.setState({ location })
-            this._fetchData(location)
+    componentWillMount() {
+        this._getLocationAsync()
+    }
 
+    _getLocationAsync = async () => {
+        console.log('inside get location')
+        try {
+            let { status } = await Permissions.askAsync(Permissions.LOCATION);
+            console.log("status", status)
+            if (status !== 'granted') {
+                console.log("not granted", this.state.errorMessage)
+                this.setState({
+                    errorMessage: 'Permission to access location was denied'
+                });
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            console.log("location is ", location)
+            let location_state = {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
+            }
+            console.log("location state", location_state, "lat and long from location ")
+
+            // this.props.getLocation(location);
+            this.setState({ location: location_state })
+            this._fetchData(location_state);
+
+        } catch (err) {
+            console.log(err)
         }
     }
+
     _fetchData = async (location_state) => {
         // code for real time request
         try {
@@ -157,7 +180,7 @@ class MapsModule extends Component {
                 <View style={styles.listContainer}>
                     {this.state.metadata ?
                         <FlatList
-                            pagingEnabled ={true}
+                            pagingEnabled={true}
                             horizontal={true}
                             data={this.state.metadata}
                             showsHorizontalScrollIndicator={false}
@@ -191,7 +214,7 @@ class MapsModule extends Component {
         );
     }
 }
-export default MapsModule;
+export default FuelStation;
 
 const styles = StyleSheet.create({
     mapContainer: {

@@ -4,9 +4,9 @@ import {
     Text,
     StyleSheet,
     Modal,
-    TouchableHighlight,
     Dimensions,
     TextInput,
+    Platform
 } from "react-native";
 import colors from '../../styles/colors';
 import RoundedButton from '../buttons/RoundedButton';
@@ -60,6 +60,7 @@ class FullScreen extends Component {
                                 style={styles.amountInput}
                                 placeholder='Amount'
                                 keyboardType={'numeric'}
+                                returnKeyType={(Platform.OS === 'ios') ? 'done' : 'next'}
                             />
                         </View>
                         <View style={styles.modalFooter}>
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        height: Dimensions.get('window').height - 280,
+        height: Dimensions.get('window').height - 150,
         backgroundColor: colors.white,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        height: Dimensions.get('window').height - 280,
+        height: Dimensions.get('window').height - 150,
         backgroundColor: colors.white,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
